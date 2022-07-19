@@ -39,7 +39,7 @@ class PostModel(models.Model):
 
 
     def __str__(self):
-        return f"{self.title[:100]} ..."
+        return self.title
 
     class Meta:
         verbose_name = _('post')

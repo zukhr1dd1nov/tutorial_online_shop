@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-
     <!-- Blog Details Hero Begin -->
     <section class="blog-hero spad">
         <div class="container">
@@ -75,35 +74,40 @@
                         </div>
                         <div class="blog__details__btns">
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <a href="" class="blog__details__btns__item">
-                                        <p><span class="arrow_left"></span> Previous Pod</p>
-                                        <h5>It S Classified How To Utilize Free Classified Ad Sites</h5>
-                                    </a>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <a href="" class="blog__details__btns__item blog__details__btns__item--next">
-                                        <p>Next Pod <span class="arrow_right"></span></p>
-                                        <h5>Tips For Choosing The Perfect Gloss For Your Lips</h5>
-                                    </a>
-                                </div>
+                                {% if object.get_previous_by_created_at %}
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <a href="{% url 'blogs:detail' object.get_previous_by_created_at.id %}" class="blog__details__btns__item">
+                                            <p><span class="arrow_left"></span> Previous Pod</p>
+                                            <h5>{{ object.get_previous_by_created_at.title|title|truncatewords:10 }}</h5>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% if object.get_next_by_created_at %}
+                                    <div class="col-lg-6 col-md-6 col-sm-6 {% if not object.get_previous_by_created_at %} offset-6 {% endif %}">
+                                        <a href="{% url 'blogs:detail' object.get_next_by_created_at.id %}" class="blog__details__btns__item blog__details__btns__item--next">
+                                            <p>Next Pod <span class="arrow_right"></span></p>
+                                            <h5>{{ object.get_next_by_created_at|title|truncatewords:10 }}</h5>
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="blog__details__comment">
                             <h4>Leave A Comment</h4>
-                            <form action="#">
+                            <form action="{% url 'blogs:comment' object.id %}" method="post">
+                                {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4">
-                                        <input type="text" placeholder="Name">
+                                        <input name="name" type="text" placeholder="Name">
                                     </div>
                                     <div class="col-lg-4 col-md-4">
-                                        <input type="text" placeholder="Email">
+                                        <input name="email" type="text" placeholder="Email">
                                     </div>
                                     <div class="col-lg-4 col-md-4">
-                                        <input type="text" placeholder="Phone">
+                                        <input name="phone" type="text" placeholder="Phone">
                                     </div>
                                     <div class="col-lg-12 text-center">
-                                        <textarea placeholder="Comment"></textarea>
+                                        <textarea name="comment" placeholder="Comment"></textarea>
                                         <button type="submit" class="site-btn">Post Comment</button>
                                     </div>
                                 </div>
