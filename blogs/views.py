@@ -1,7 +1,4 @@
-from django.core.exceptions import ValidationError
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from django.views import View
+from django.shortcuts import render, reverse, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 from .models import PostModel
 from .forms import CommentModelForm
@@ -25,11 +22,11 @@ class PostDetailView(DetailView):
 
 class CommentCreateView(CreateView):
     form_class = CommentModelForm
-    template_name = 'blog-detail.html'
 
     def form_valid(self, form):
+        print(form.instance)
         form.instance.post = get_object_or_404(PostModel, pk=self.kwargs.get('pk'))
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.request.path.replace('/comment','')
+        return reverse('blogs:detail', kwargs={'pk':self.kwargs.get('pk')})  #/blogs/detail/3/
